@@ -1,7 +1,7 @@
 {
-  "name": "modelpulse",
-  "displayName": "ModelPulse",
-  "description": "At-a-glance AI model quota monitoring in your VS Code status bar with rich hover tooltips.",
+  "name": "antigravity-model-quota-monitor",
+  "displayName": "Antigravity Model Quota Monitor",
+  "description": "VS Code extension for monitoring Google Antigravity AI quotas. ",
   "version": "0.1.0",
   "publisher": "antigravity",
   "engines": {
