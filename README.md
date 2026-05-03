@@ -7,6 +7,16 @@
 
 VS Code extension for monitoring Google Antigravity AI model quotas directly in your status bar.
 
+<img width="1919" height="1024" alt="image" src="https://github.com/user-attachments/assets/384401dd-0868-4176-997e-4ad54a67bb97" />
+
+<br>
+
+**Features**: Status Bar Monitor · Rich Hover Tooltip · QuickPick Panel · Threshold Indicators · Custom Display Formats
+<br>
+
+<img width="1919" height="1073" alt="image" src="https://github.com/user-attachments/assets/182fcab9-7076-4924-86b2-db2e1c4e3a90" />
+
+
 **Features**: Status Bar Monitor · Rich Hover Tooltip · QuickPick Panel · Threshold Indicators · Custom Display Formats
 
 ---
@@ -27,6 +37,11 @@ Three display formats available, configurable via `agStatusBar.displayFormat`:
 
 - **Dynamic Colors**: Indicator turns yellow or red based on configurable warning/critical thresholds.
 
+---
+
+## ⭐ Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=SimpleCyber/vscode-antigravity-model-quota&type=Date)](https://www.star-history.com/#SimpleCyber/vscode-antigravity-model-quota&Date)
 ---
 
 ### Rich Hover Tooltip
