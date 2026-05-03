@@ -3,9 +3,13 @@
   "displayName": "Antigravity Model Quota",
   "description": "Track your AI model usage quota in VS Code",
   "version": "0.0.1",
-  "publisher": "satyam-yadav",
+  "publisher": "SimpleCyber",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SimpleCyber/vscode-antigravity-model-quota.git"
+  },
   "engines": {
-    "vscode": "^1.80.0"
+    "vscode": "^1.90.0"
   },
   "icon": "assets/icon.png",
   "categories": [
