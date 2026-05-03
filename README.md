@@ -1,20 +1,19 @@
 # Antigravity Model Quota Monitor
-
-[![Version](https://img.shields.io/visual-studio-marketplace/v/antigravity.antigravity-model-quota-monitor?color=success&label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=antigravity.antigravity-model-quota-monitor)
 [![GitHub stars](https://img.shields.io/github/stars/SimpleCyber/vscode-antigravity-model-quota?style=flat&color=gold)](https://github.com/SimpleCyber/vscode-antigravity-model-quota)
 [![GitHub issues](https://img.shields.io/github/issues/SimpleCyber/vscode-antigravity-model-quota)](https://github.com/SimpleCyber/vscode-antigravity-model-quota/issues)
 [![License](https://img.shields.io/github/license/SimpleCyber/vscode-antigravity-model-quota)](https://github.com/SimpleCyber/vscode-antigravity-model-quota/blob/main/LICENSE)
 
 VS Code extension for monitoring Google Antigravity AI model quotas directly in your status bar.
 
-<img width="1919" height="1024" alt="image" src="https://github.com/user-attachments/assets/384401dd-0868-4176-997e-4ad54a67bb97" />
+<img src="https://github.com/user-attachments/assets/384401dd-0868-4176-997e-4ad54a67bb97" width="800"/>
 
 <br>
 
 **Features**: Status Bar Monitor · Rich Hover Tooltip · QuickPick Panel · Threshold Indicators · Custom Display Formats
+
 <br>
 
-<img width="1919" height="1073" alt="image" src="https://github.com/user-attachments/assets/182fcab9-7076-4924-86b2-db2e1c4e3a90" />
+<img src="https://github.com/user-attachments/assets/182fcab9-7076-4924-86b2-db2e1c4e3a90" width="800"/>
 
 
 **Features**: Status Bar Monitor · Rich Hover Tooltip · QuickPick Panel · Threshold Indicators · Custom Display Formats
