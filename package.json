@@ -29,12 +29,12 @@
   "contributes": {
     "commands": [
       {
-        "command": "agStatusBar.showDetails",
+        "command": "antigravity.showDetails",
         "title": "Show Model Quota Details",
         "category": "Antigravity"
       },
       {
-        "command": "agStatusBar.refresh",
+        "command": "antigravity.refreshQuota",
         "title": "Refresh Quota Data",
         "category": "Antigravity",
         "icon": "$(sync)"

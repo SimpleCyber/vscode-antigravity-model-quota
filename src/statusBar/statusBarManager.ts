@@ -15,6 +15,7 @@ export class StatusBarManager {
     private lastModels: ModelQuota[] = [];
     private lastCredits: number = 0;
     private config: StatusBarConfig;
+    private temporaryMessageTimer: ReturnType<typeof setTimeout> | undefined;
 
     constructor(context: vscode.ExtensionContext, config: StatusBarConfig) {
         this.config = config;
@@ -108,6 +109,27 @@ export class StatusBarManager {
     public setLoading(): void {
         this.statusBarItem.text = '$(sync~spin) Syncing...';
         this.statusBarItem.backgroundColor = undefined;
+    }
+
+    /**
+     * Show a temporary confirmation message.
+     */
+    public showTemporaryMessage(message: string, durationMs: number = 3000): void {
+        if (this.temporaryMessageTimer) {
+            clearTimeout(this.temporaryMessageTimer);
+        }
+
+        const originalText = this.statusBarItem.text;
+        const originalColor = this.statusBarItem.backgroundColor;
+
+        this.statusBarItem.text = message;
+        this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.prominentBackground');
+
+        this.temporaryMessageTimer = setTimeout(() => {
+            this.statusBarItem.text = originalText;
+            this.statusBarItem.backgroundColor = originalColor;
+            this.temporaryMessageTimer = undefined;
+        }, durationMs);
     }
 
     /**

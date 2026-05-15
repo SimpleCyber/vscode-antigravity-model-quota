@@ -60,6 +60,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 currentConfig,
                 async () => {
                     await refreshQuota();
+                    statusBarManager.showTemporaryMessage('$(check) Quota Data Refreshed');
                 },
                 async (viewMode) => {
                     statusBarManager.setPopupViewMode(viewMode);
@@ -77,6 +78,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 if (dataProvider.isConnected) {
                     await refreshQuota();
                 }
+                
+                statusBarManager.showTemporaryMessage('$(check) Yes, it has been updated');
             }
         }),
     );
@@ -86,6 +89,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         vscode.commands.registerCommand('antigravity.refreshQuota', async () => {
             statusBarManager.setLoading();
             await refreshQuota();
+            statusBarManager.showTemporaryMessage('$(check) Quota Refreshed');
             outputChannel.appendLine('🔄 Manual refresh triggered');
         }),
     );
