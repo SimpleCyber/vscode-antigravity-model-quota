@@ -1,7 +1,14 @@
 # Antigravity Model Quota Monitor
+
+
+
 [![GitHub stars](https://img.shields.io/github/stars/SimpleCyber/vscode-antigravity-model-quota?style=flat&color=gold)](https://github.com/SimpleCyber/vscode-antigravity-model-quota)
 [![GitHub issues](https://img.shields.io/github/issues/SimpleCyber/vscode-antigravity-model-quota)](https://github.com/SimpleCyber/vscode-antigravity-model-quota/issues)
 [![License](https://img.shields.io/github/license/SimpleCyber/vscode-antigravity-model-quota)](https://github.com/SimpleCyber/vscode-antigravity-model-quota/blob/main/LICENSE)
+
+
+
+<img width="788" height="243" alt="image" src="https://github.com/user-attachments/assets/305888e4-9e9e-447b-a737-850accbccfb3" />
 
 VS Code extension for monitoring Google Antigravity AI model quotas directly in your status bar.
 
