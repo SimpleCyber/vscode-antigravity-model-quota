@@ -7,16 +7,23 @@
 
 import * as vscode from 'vscode';
 import { StatusBarConfig } from './data/types';
+import { QuotaDataProvider } from './data/types';
 import { RealQuotaProvider } from './data/realQuotaProvider';
 import { StatusBarManager } from './statusBar/statusBarManager';
 import { showDetailsQuickPick } from './commands/detailsCommand';
 
 // ── State ────────────────────────────────────────────
 let statusBarManager: StatusBarManager;
-let dataProvider: RealQuotaProvider;
+let dataProvider: QuotaDataProvider;
 let refreshTimer: ReturnType<typeof setInterval> | undefined;
 let outputChannel: vscode.OutputChannel;
 let extensionContext: vscode.ExtensionContext;
+
+// ── Activity Tracking ─────────────────────────────────
+let lastChangeTime = 0;
+let changeBurstCount = 0;
+let isGenerating = false;
+let idleRefreshTimeout: NodeJS.Timeout | undefined;
 
 /**
  * Extension activation.
@@ -56,7 +63,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             }
 
             const newPinnedIds = await showDetailsQuickPick(
-                models, 
+                () => statusBarManager.getLastModels(), 
                 currentConfig,
                 async () => {
                     await refreshQuota();
@@ -92,6 +99,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
             statusBarManager.showTemporaryMessage('$(check) Quota Refreshed');
             outputChannel.appendLine('🔄 Manual refresh triggered');
         }),
+    );
+
+    // ── Listen for document changes (Intelligent Polling) ────
+    context.subscriptions.push(
+        vscode.workspace.onDidChangeTextDocument(handleDocumentChange)
     );
 
     // ── Listen for config changes ────────────────────
@@ -130,6 +142,47 @@ export function deactivate(): void {
 }
 
 // ── Internal helpers ─────────────────────────────────
+
+/**
+ * Detect AI generation activity by observing rapid or large document changes.
+ * Debounces a quota refresh after the activity stops.
+ */
+function handleDocumentChange(e: vscode.TextDocumentChangeEvent): void {
+    if (e.contentChanges.length === 0) return;
+    
+    const now = Date.now();
+    const timeSinceLastChange = now - lastChangeTime;
+    
+    if (timeSinceLastChange < 500) {
+        changeBurstCount++;
+    } else {
+        changeBurstCount = 1;
+    }
+    lastChangeTime = now;
+
+    // AI agents often apply large changes or rapid changes
+    const isLargeChange = e.contentChanges.some(c => c.text.length > 50 || c.rangeLength > 50);
+    
+    if (changeBurstCount > 5 || isLargeChange) {
+        isGenerating = true;
+    }
+
+    if (isGenerating) {
+        if (idleRefreshTimeout) {
+            clearTimeout(idleRefreshTimeout);
+        }
+        
+        idleRefreshTimeout = setTimeout(async () => {
+            isGenerating = false;
+            changeBurstCount = 0;
+            // Activity stopped, trigger refresh
+            outputChannel.appendLine('🤖 AI Activity stopped. Auto-refreshing quota...');
+            statusBarManager.setLoading();
+            await refreshQuota();
+            statusBarManager.showTemporaryMessage('$(check) Auto Refreshed');
+        }, 2000);
+    }
+}
 
 /**
  * Fetch quota data and update the status bar.

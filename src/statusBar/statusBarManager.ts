@@ -7,7 +7,7 @@
 
 import * as vscode from 'vscode';
 import { ModelQuota, StatusBarConfig } from '../data/types';
-import { getStatusIcon } from '../utils/formatting';
+import { getStatusIcon, formatPercentage } from '../utils/formatting';
 import { buildTooltip } from './tooltipBuilder';
 
 export class StatusBarManager {
@@ -16,6 +16,7 @@ export class StatusBarManager {
     private lastCredits: number = 0;
     private config: StatusBarConfig;
     private temporaryMessageTimer: ReturnType<typeof setTimeout> | undefined;
+    private lastUpdateTime: Date | undefined;
 
     constructor(context: vscode.ExtensionContext, config: StatusBarConfig) {
         this.config = config;
@@ -48,11 +49,13 @@ export class StatusBarManager {
             model.isPinned = this.config.pinnedModelIds.includes(model.id);
         }
 
+        this.lastUpdateTime = new Date();
+
         // Update status bar text
         this.updateStatusBarText(filteredModels);
 
         // Update hover tooltip
-        this.statusBarItem.tooltip = buildTooltip(filteredModels, this.config);
+        this.statusBarItem.tooltip = buildTooltip(filteredModels, this.config, this.lastUpdateTime);
     }
 
     /**
@@ -190,7 +193,7 @@ export class StatusBarManager {
      */
     private formatModelText(model: ModelQuota): string {
         const icon = getStatusIcon(model.remainingPercentage, this.config);
-        const pct = `${Math.floor(model.remainingPercentage)}%`;
+        const pct = formatPercentage(model.remainingPercentage);
 
         switch (this.config.displayFormat) {
             case 'minimal':
