@@ -85,25 +85,12 @@ export function getQuotaLevel(percentage: number, config: StatusBarConfig): Quot
     return QuotaLevel.Normal;
 }
 
-export function generateProgressBar(percentage: number): string {
+export function generateProgressBar(percentage: number, length: number = 20): string {
     const clamped = Math.max(0, Math.min(100, percentage));
-    const segments = 5;
-    const fillPerSegment = 100 / segments;
-    const filledSegments = Math.floor(clamped / fillPerSegment);
-    const hasPartialSegment = (clamped % fillPerSegment) > 0;
-    
-    let bar = '';
-    for (let i = 0; i < segments; i++) {
-        if (i < filledSegments || (i === filledSegments && hasPartialSegment)) {
-            bar += '███';
-        } else {
-            bar += '───';
-        }
-        if (i < segments - 1) {
-            bar += ' ';
-        }
-    }
-    return bar;
+    const fillAmount = Math.round((clamped / 100) * length);
+    const filled = '█'.repeat(fillAmount);
+    const empty = '░'.repeat(length - fillAmount);
+    return filled + empty;
 }
 
 /**
@@ -144,4 +131,25 @@ export function getCapabilityBadges(capabilities: { text: boolean; image: boolea
     if (capabilities.video) { badges.push('🎬 Video'); }
     if (capabilities.thinking) { badges.push('🧠 Thinking'); }
     return badges.join(' · ');
+}
+
+/**
+ * Format a relative time string (e.g., "12 seconds ago")
+ */
+export function formatTimeAgo(date: Date): string {
+    const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+    
+    if (seconds < 60) {
+        return `${Math.max(0, seconds)} seconds ago`;
+    }
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) {
+        return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+    }
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) {
+        return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+    }
+    const days = Math.floor(hours / 24);
+    return `${days} day${days !== 1 ? 's' : ''} ago`;
 }

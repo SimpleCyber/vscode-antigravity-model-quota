@@ -44,9 +44,9 @@ const VIEW_GROUPED_BUTTON: vscode.QuickInputButton = {
  * Returns an object with pinned models and any configuration changes.
  */
 export async function showDetailsQuickPick(
-    models: ModelQuota[],
+    getModels: () => ModelQuota[],
     config: StatusBarConfig,
-    onRefreshRequested: () => void,
+    onRefreshRequested: () => Promise<void>,
     onViewModeChanged: (mode: 'flat' | 'grouped') => void
 ): Promise<string[] | undefined> {
     return new Promise<string[] | undefined>((resolve) => {
@@ -67,9 +67,10 @@ export async function showDetailsQuickPick(
 
         // Build items
         const updateItems = () => {
+            const currentModels = getModels();
             const items = viewMode === 'flat' 
-                ? buildFlatItems(models, config)
-                : buildGroupedItems(models, config);
+                ? buildFlatItems(currentModels, config)
+                : buildGroupedItems(currentModels, config);
             qp.items = items;
             qp.selectedItems = items.filter(i => i.isPinned && !i.isSeparator);
         };
@@ -83,11 +84,13 @@ export async function showDetailsQuickPick(
         });
 
         // Handle button clicks
-        qp.onDidTriggerButton((btn) => {
+        qp.onDidTriggerButton(async (btn) => {
             if (btn === REFRESH_BUTTON) {
-                onRefreshRequested();
-                // Optionally show a quick feedback
-                vscode.window.showInformationMessage('Refreshing Antigravity quota data...');
+                qp.busy = true;
+                await onRefreshRequested();
+                updateItems();
+                qp.busy = false;
+                vscode.window.showInformationMessage('Refreshed Antigravity quota data.');
             } else if (btn === VIEW_FLAT_BUTTON) {
                 viewMode = 'flat';
                 onViewModeChanged('flat');

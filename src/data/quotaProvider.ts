@@ -100,6 +100,10 @@ export class MockQuotaProvider implements QuotaDataProvider {
     private driftAmplitude = 3; // max random drift per fetch
     private lastValues: Map<string, number> = new Map();
     private credits = 1250;
+    
+    get isConnected(): boolean { return true; }
+    async connect(): Promise<boolean> { return true; }
+    disconnect(): void {}
 
     async fetchQuota(): Promise<ModelQuota[]> {
         const now = Date.now();

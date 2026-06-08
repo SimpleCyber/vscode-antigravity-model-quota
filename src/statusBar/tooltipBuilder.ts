@@ -4,14 +4,15 @@ import {
     generateProgressBar,
     formatPercentage,
     getStatusEmoji,
-    getCurrentTimeFormatted
+    getCurrentTimeFormatted,
+    formatTimeAgo
 } from '../utils/formatting';
 
 /**
  * Builds a clean, simplified Markdown tooltip for the status bar.
  * Removes emojis from group headers and simplifies layout.
  */
-export function buildTooltip(models: ModelQuota[], config: StatusBarConfig): vscode.MarkdownString {
+export function buildTooltip(models: ModelQuota[], config: StatusBarConfig, lastUpdateTime?: Date): vscode.MarkdownString {
     const tooltip = new vscode.MarkdownString();
     tooltip.isTrusted = true;
     tooltip.supportHtml = true;
@@ -43,11 +44,11 @@ export function buildTooltip(models: ModelQuota[], config: StatusBarConfig): vsc
         // Get colored emoji based on threshold
         const emoji = getStatusEmoji(model.remainingPercentage, config);
         
-        // Percentage rounded
-        const pct = Math.floor(model.remainingPercentage);
+        // Percentage formatted to 1 decimal place
+        const pct = formatPercentage(model.remainingPercentage);
         
-        // Formatted line: 🟢 **Gemini 3.1 Pro**      80% remaining      _reset in 2 hours_
-        tooltip.appendMarkdown(`${emoji} **${model.label}** &nbsp;&nbsp;&nbsp;&nbsp; _${pct}% remaining_ &nbsp;&nbsp;&nbsp;&nbsp; _reset in ${model.timeUntilResetFormatted}_\n\n`);
+        // Formatted line: 🟢 **Gemini 3.1 Pro**      80.5% remaining      _reset in 2 hours_
+        tooltip.appendMarkdown(`${emoji} **${model.label}** &nbsp;&nbsp;&nbsp;&nbsp; _${pct} remaining_ &nbsp;&nbsp;&nbsp;&nbsp; _reset in ${model.timeUntilResetFormatted}_\n\n`);
     }
 
     tooltip.appendMarkdown('View your available model quota. Quota refreshes periodically based on your plan.\n\n');
@@ -57,6 +58,10 @@ export function buildTooltip(models: ModelQuota[], config: StatusBarConfig): vsc
     const detailsCmd = `[$(window) Open Dashboard](command:antigravity.showDetails "View Detailed Quota")`;
     
     tooltip.appendMarkdown(`${refreshCmd} &nbsp;&nbsp;&nbsp;&nbsp; ${detailsCmd}`);
+
+    if (lastUpdateTime) {
+        tooltip.appendMarkdown(`\n\n---\n_Last Updated: ${formatTimeAgo(lastUpdateTime)}_`);
+    }
 
     return tooltip;
 }
